@@ -126,7 +126,6 @@ public class MQAccessBuilder {
 					//将消息与CorrelationData关联，并发送
 					rabbitTemplate.correlationConvertAndSend(messageWithTime.getMessage(),
 							new CorrelationData(String.valueOf(messageWithTime.getId())));
-					rabbitTemplate
 				} catch (Exception e) {
 					logger.error("将消息丢mq失败，异常：{}", e.getMessage());
 					return new DetailRes(false, "");
@@ -280,9 +279,9 @@ public class MQAccessBuilder {
 			channel.exchangeDeclare(exchange, "topic", true, false, null);
 		}
 		logger.info("queueDeclare ..........");
-		Map<String, Object> args = new HashMap<String, Object>();
-		args.put("x-message-ttl", 60000);//消息在队列中驻留60秒过期，消息过期后会丢到死信队列，消费消费死信队列
-		channel.queueDeclare(queue, true, false, false, args);
+		//Map<String, Object> args = new HashMap<String, Object>();
+		//args.put("x-message-ttl", 60000);//消息在队列中驻留60秒过期，消息过期后会丢到死信队列，消费消费死信队列
+		channel.queueDeclare(queue, true, false, false, null);
 		
 		logger.info("queueBind ..........");
 		/*
