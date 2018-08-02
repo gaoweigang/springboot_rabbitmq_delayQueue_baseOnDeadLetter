@@ -1,0 +1,21 @@
+
+spring:
+     application:
+          name: spirng-boot-rabbitmq
+
+#在这里没有使用springboot的自动配置
+rabbitmq:
+     host: 192.168.13.64
+     port: 5672
+     username: hbsit
+     password: hbsit
+     virtual-host: /hbsit
+     queue: QUEUE_TEST
+     routing: QUEUE_TEST
+     direct: 
+         exchange: EXCHANGE_DIRECT_TEST 
+     deadLetter: 
+         queue: QUEUE_DEADLETTER_TEST
+         routing: QUEUE_DEADLETTER_TEST
+         direct: 
+              exchange: EXCHANGE_DIRECT_DEADLETTER_TEST    

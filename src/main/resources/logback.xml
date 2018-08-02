@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="false">
+    <property name="outPattern"
+              value="[%p] %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%C]%L - %m %n" />
+    <!-- logback -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${outPattern}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    <appender name="FILE"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>./output.log</file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <!-- 按天来回滚，如果需要按小时来回滚，则设置为{yyyy-MM-dd_HH} -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>./output-%i.log
+            </fileNamePattern>
+            <!-- 如果按天来回滚，则最大保存时间为maxHistory天，maxHistory天之前的都将被清理掉 -->
+            <minIndex>1</minIndex>
+            <maxIndex>10</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>200MB</MaxFileSize>
+        </triggeringPolicy>
+        <!-- 日志输出格式 -->
+        <encoder>
+            <Pattern>[%p] %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%C]%L - %m %n</Pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="ERROR_FILE"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>./output.error.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <!-- 按天来回滚，如果需要按小时来回滚，则设置为{yyyy-MM-dd_HH} -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>./output.error-%i.log
+            </fileNamePattern>
+            <!-- 如果按天来回滚，则最大保存时间为maxHistory天，maxHistory天之前的都将被清理掉 -->
+            <minIndex>1</minIndex>
+            <maxIndex>10</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>200MB</MaxFileSize>
+        </triggeringPolicy>
+        <!-- 日志输出格式 -->
+        <encoder>
+            <Pattern>[%p] %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%C]%L - %m %n</Pattern>
+        </encoder>
+    </appender>
+    <!-- 异步输出，异步的log片段必须在同步段后面，否则不起作用 -->
+    <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>10000</queueSize>
+        <!-- 添加附加的appender,最多只能添加一个 -->
+        <appender-ref ref="FILE" />
+    </appender>
+
+    <appender name="ASYNC_ERROR_FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>10000</queueSize>
+        <!-- 添加附加的appender,最多只能添加一个 -->
+        <appender-ref ref="ERROR_FILE" />
+    </appender>
+
+    <!-- <logger name="com.netflix" level="DEBUG" additivity="false">
+        <appender-ref ref="CONSOLE" />
+    </logger> -->
+    <root level="info">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="ASYNC_FILE" />
+        <appender-ref ref="ASYNC_ERROR_FILE" />
+        <appender-ref ref="ERROR_FILE" />
+    </root>
+    <!--sql日志-->
+    <logger name="com.gwg" level="DEBUG"></logger>
+</configuration>
