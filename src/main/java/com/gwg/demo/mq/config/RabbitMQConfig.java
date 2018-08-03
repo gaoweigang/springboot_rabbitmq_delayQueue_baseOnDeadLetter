@@ -77,22 +77,22 @@ public class RabbitMQConfig {
     public MQAccessBuilder mqAccessBuilder() throws IOException{
 		MQAccessBuilder mqAccessBuilder = new MQAccessBuilder(connectionFactory());
 		//构建正常队列，必须在死信队列之前
-		mqAccessBuilder.buildQueue(userExchangeName, userRouting, userQueueName, connectionFactory(), "direct");
+		mqAccessBuilder.buildQueue(userExchangeName, userRouting, userQueueName, connectionFactory(), "direct", deadLetterExchangeName, deadLetteruserRouting);
 		//构建死信队列
-		mqAccessBuilder.buildDeadLetterQueue(userExchangeName, deadLetterExchangeName, deadLetteruserRouting, deadLetterQueueName, connectionFactory(), "direct");
+		mqAccessBuilder.buildDeadLetterQueue(deadLetterExchangeName, deadLetteruserRouting, deadLetterQueueName, connectionFactory(), "direct");
 		return mqAccessBuilder;
 	}
 
 	/***************** messsage consumer ***************************************************/
     //采用线程池进行消费
-	/*@Bean("userThreadPoolConsumer")
+	@Bean("userThreadPoolConsumer")
 	public ThreadPoolConsumer userThreadPoolConsumer() throws IOException{
 		ThreadPoolConsumer threadPoolConsumer = new ThreadPoolConsumer.ThreadPoolConsumerBuilder( null, null, deadLetterQueueName)
 				.setMQAccessBuilder(mqAccessBuilder()).setMessageProcess(new UserMessageProcess())
 				.setThreadCount(Constants.THREAD_COUNT).setIntervalMils(Constants.INTERVAL_MILS).build();
 		threadPoolConsumer.start();//启动监听
 		return threadPoolConsumer;
-	}*/
+	}
 
 	/***************** message producer*****************************************************/
 	@Bean("userMessageProducer")
